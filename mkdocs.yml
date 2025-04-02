@@ -31,3 +31,5 @@ nav:
     - advanced/06-macros.md
   - 練習題:
     - practices/01-comment-and-declare.md
+    - practices/02-type-inference-and-output.md
+    - practices/03-condition-flow.md
