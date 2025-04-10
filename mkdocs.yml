@@ -1,4 +1,4 @@
-site_name: nim 學習筆記
+site_name: Nim 學習筆記
 site_url: https://mydomain.org/
 theme:
   name: material
@@ -31,7 +31,7 @@ nav:
     - advanced/04-template.md
     - advanced/05-pragmas.md
     - advanced/06-macros.md
-  - 實踐與應用:
+  - 練習題:
     - practices/01-comment-and-declare.md
     - practices/02-type-inference-and-output.md
     - practices/03-condition-flow.md
@@ -39,3 +39,6 @@ nav:
     - practices/05-types-in-detail.md
     - practices/06-modules-and-practice.md
     - practices/07-error-and-generic.md
+    - practices/08-template.md
+    - practices/09-pragmas.md
+    - practices/10-macros.md
