@@ -12,13 +12,15 @@ markdown_extensions:
   - pymdownx.superfences
 
 nav:
-  - 基礎語法: 
+  - 入門與基礎: 
     - basic/01-start.md
     - basic/02-control-flow.md
     - basic/03-function-and-module.md
+  - 資料結構與型別:
     - basic/04-data-type.md
     - basic/05-ref-and-pointer.md
     - basic/06-advanced-control.md
+  - 進階主題:
     - basic/07-function-and-iterator.md
     - basic/08-types-in-detail.md
     - basic/09-modules-and-practice.md
@@ -29,7 +31,7 @@ nav:
     - advanced/04-template.md
     - advanced/05-pragmas.md
     - advanced/06-macros.md
-  - 練習題:
+  - 實踐與應用:
     - practices/01-comment-and-declare.md
     - practices/02-type-inference-and-output.md
     - practices/03-condition-flow.md
@@ -37,6 +39,3 @@ nav:
     - practices/05-types-in-detail.md
     - practices/06-modules-and-practice.md
     - practices/07-error-and-generic.md
-    - practices/08-template.md
-    - practices/09-macros.md
-    - practices/10-pragmas.md

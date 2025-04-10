@@ -1,7 +1,5 @@
 # 進階型別
 
-Nim 提供豐富且靈活的型別系統，支援多種進階型別，幫助開發者更精確地控制資料結構與程式邏輯。
-
 ## 學習目標
 - 掌握 Nim 的進階型別系統
 - 學會定義和使用自定義型別
@@ -30,253 +28,488 @@ Nim 提供豐富且靈活的型別系統，支援多種進階型別，幫助開�
    - 泛型支援
    - 子型別關係
 
-## 基本進階型別
+## 序數型別
 
-### 列舉型別 (Enumerations)
+序數型別（Ordinal Types）是具有自然順序的型別，包括整數、字元、布林和列舉型別。
 
-列舉型別用於定義一組命名常數，適合表示有限的選項。
+### 列舉型別（Enum）
 
-```nim
-type Days = enum
-  Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
-
-var today: Days = Tuesday
-echo today  # 輸出：Tuesday
-```
-
-列舉型別的值可以用來進行比較或迭代：
+列舉型別用於表示一組相關的命名常數：
 
 ```nim
-for day in Days:
-  echo day
-```
-
-程式會輸出所有列舉值。
-
-### 序數型別 (Ordinal types)  
-序數型別包括整數、字元和布林值，這些型別具有順序性。
-
-```nim
-var x: int = 5
-echo x + 1  # 輸出：6
-
-var ch: char = 'A'
-echo ord(ch)  # 輸出：65
-```
-
-### 子範圍型別 (Subranges)  
-子範圍型別用於限制數值範圍，提升程式的安全性。
-
-```nim
-type Age = range[0..120]
-
-var myAge: Age = 25
-# myAge = 150  # 編譯錯誤：超出範圍
-```
-
-子範圍型別確保值僅限於指定範圍。
-
-## 集合與陣列
-
-### 集合型別 (Sets)  
-集合型別是一組唯一元素，適合用於位元欄位或快速查找。
-
-```nim
-type CharSet = set[char]
-
-var vowels: CharSet = {'a', 'e', 'i', 'o', 'u'}
-echo 'a' in vowels  # 輸出：true
-```
-
-集合型別支援集合運算，例如交集、聯集：
-
-```nim
-var consonants: CharSet = {'b', 'c', 'd'}
-echo vowels + consonants  # 聯集
-```
-
-### 陣列型別 (Arrays)  
-陣列型別是固定大小的資料結構，適合存放同型別的元素。
-
-```nim
-var arr: array[0..4, int] = [1, 2, 3, 4, 5]
-echo arr[2]  # 輸出：3
-```
-
-陣列型別支援索引操作和遍歷：
-
-```nim
-for num in arr:
-  echo num
-```
-
-## 動態與彈性型別
-
-### 序列型別 (Sequences)  
-序列型別是動態大小的陣列，適合存放可變長度的資料。
-
-```nim
-var seq: seq[int] = @[1, 2, 3]
-seq.add(4)
-echo seq  # 輸出：@[1, 2, 3, 4]
-```
-
-### 開放陣列 (Open arrays)  
-開放陣列用於函式參數，允許傳入任意大小的陣列。
-
-```nim
-proc printArray(arr: openArray[int]) =
-  for num in arr:
-    echo num
-
-printArray([1, 2, 3])
-```
-
-### 可變參數 (Varargs)  
-可變參數允許函式接受不定數量的參數。
-
-```nim
-proc sum(args: varargs[int]): int =
-  result = 0
-  for num in args:
-    result += num
-
-echo sum(1, 2, 3, 4)  # 輸出：10
-```
-
-### 切片型別 (Slices)  
-切片型別用於操作陣列或序列的一部分。
-
-```nim
-var arr = @[1, 2, 3, 4, 5]
-echo arr[1..3]  # 輸出：@[2, 3, 4]
-```
-
-## 複合資料型別
-
-### 物件型別 (Objects)  
-物件型別是自定義的複合型別，適合表示更複雜的資料結構。
-
-```nim
-type Person = object
-  name: string
-  age: int
-
-var p: Person = Person(name: "Alice", age: 30)
-echo p.name  # 輸出：Alice
-```
-
-### 元組型別 (Tuples)  
-元組型別是一組固定長度的值，適合存放不同型別的資料。
-
-```nim
-var t: tuple[name: string, age: int] = ("Bob", 25)
-echo t.name  # 輸出：Bob
-```
-
-## 引用與函式型別
-
-### 引用與指標型別 (Reference and pointer types)  
-引用與指標型別用於操作記憶體中的資料。
-
-```nim
-var x: int = 10
-var refX: ref int = ref x
-refX[] = 20
-echo x  # 輸出：20
-```
-
-### 程序型態 (Procedural type)  
-程序型態用於表示函式型別，適合用於高階函式。
-
-```nim
-type MathFunc = proc(a, b: int): int
-
-proc add(a, b: int): int = a + b
-var f: MathFunc = add
-echo f(3, 5)  # 輸出：8
-```
-
-## 特殊型別
-
-### 區分型態 (Distinct type)  
-區分型態用於定義與基礎型別不同的新型態，避免隱式轉換。
-
-```nim
-type Meter = distinct int
-
-var length: Meter = 100
-# echo length + 10  # 編譯錯誤：型態不匹配
-```
-
-透過 `distinct`，開發者可以定義更具語意的型態。
-
-## 練習題
-
-### 1. 基礎型別練習
-```nim
-# 1. 實現一個函式，將列舉型別轉換為字串
 type
-  Color = enum
-    Red, Green, Blue
+  Direction = enum
+    North, East, South, West
+
+# 使用列舉型別
+var heading: Direction = North
+echo heading  # 輸出: North
+
+# 轉換為整數
+echo ord(heading)  # 輸出: 0
+
+# 列舉迭代
+for dir in Direction:
+  echo dir  # 輸出所有方向：North, East, South, West
+```
+
+#### 自定義枚舉值
+
+可以為列舉成員指定自定義值：
+
+```nim
+type
+  HttpStatus = enum
+    OK = 200,
+    Created = 201,
+    Accepted = 202,
+    BadRequest = 400,
+    Unauthorized = 401,
+    NotFound = 404,
+    ServerError = 500
+
+echo HttpStatus.NotFound  # 輸出: NotFound
+echo ord(HttpStatus.NotFound)  # 輸出: 404
+```
+
+## 複合型別
+
+### 陣列（Array）
+
+陣列是固定大小的同質集合，編譯時必須知道其大小：
+
+```nim
+# 聲明一個包含 5 個整數的陣列
+var numbers: array[5, int]
+
+# 初始化陣列
+var colors = ["紅", "橙", "黃", "綠", "藍"]
+
+# 訪問元素
+echo colors[0]  # 輸出: 紅
+colors[1] = "橘"
+echo colors[1]  # 輸出: 橘
+
+# 獲取陣列大小
+echo colors.len  # 輸出: 5
+
+# 迭代陣列
+for color in colors:
+  echo color
+```
+
+#### 自定義索引
+
+Nim 允許使用非零起始索引或自定義索引型別：
+
+```nim
+# 從 1 開始的索引
+var weekdays: array[1..7, string] = ["一", "二", "三", "四", "五", "六", "日"]
+echo weekdays[1]  # 輸出: 一
+
+# 使用列舉作為索引
+type Day = enum Mon, Tue, Wed, Thu, Fri, Sat, Sun
+var schedule: array[Day, string]
+schedule[Mon] = "會議"
+schedule[Fri] = "健身"
+echo schedule[Mon]  # 輸出: 會議
+```
+
+### 序列（Sequence）
+
+序列是動態大小的同質集合，可以在運行時改變大小：
+
+```nim
+# 聲明空序列
+var nums: seq[int] = @[]
+
+# 使用 @ 運算符創建序列
+var fruits = @["蘋果", "香蕉", "櫻桃"]
+
+# 添加元素
+fruits.add("橘子")
+echo fruits  # 輸出: @["蘋果", "香蕉", "櫻桃", "橘子"]
+
+# 連接序列
+let moreFruits = @["葡萄", "西瓜"]
+fruits.add(moreFruits)
+echo fruits  # 輸出: @["蘋果", "香蕉", "櫻桃", "橘子", "葡萄", "西瓜"]
+
+# 序列切片
+echo fruits[1..3]  # 輸出: @["香蕉", "櫻桃", "橘子"]
+
+# 檢查元素存在
+echo "蘋果" in fruits  # 輸出: true
+```
+
+### 元組（Tuple）
+
+元組是異質的固定大小集合，可以包含不同型別的元素：
+
+```nim
+# 定義元組
+var person: tuple[name: string, age: int] = ("Alice", 30)
+
+# 訪問元素
+echo person.name  # 輸出: Alice
+echo person.age   # 輸出: 30
+
+# 解構元組
+let (name, age) = person
+echo name  # 輸出: Alice
+
+# 匿名元組
+let point = (10, 20)
+echo point[0]  # 輸出: 10
+```
+
+#### 命名元組型別
+
+```nim
+# 定義命名元組型別
+type
+  Person = tuple
+    name: string
+    age: int
+    active: bool
+
+# 使用命名元組型別
+var employee: Person = (name: "Bob", age: 25, active: true)
+echo employee  # 輸出: (name: "Bob", age: 25, active: true)
+```
+
+### 物件（Object）
+
+物件是自定義複合型別，類似於其他語言中的類或結構體：
+
+```nim
+# 定義物件型別
+type
+  Student = object
+    id: int
+    name: string
+    grades: seq[float]
+
+# 創建物件實例
+var alice = Student(id: 1, name: "Alice", grades: @[95.5, 87.0, 92.5])
+
+# 訪問物件欄位
+echo alice.name   # 輸出: Alice
+alice.grades.add(89.0)
+echo alice.grades  # 輸出: @[95.5, 87.0, 92.5, 89.0]
+```
+
+#### 物件變體（Variant Objects）
+
+物件變體使用 `case` 語句根據一個辨別欄位包含不同的欄位集：
+
+```nim
+type
+  Shape = object
+    case kind: enum
+      Circle, Rectangle, Triangle
+    of Circle:
+      radius: float
+    of Rectangle:
+      width, height: float
+    of Triangle:
+      a, b, c: float  # 三邊長度
+
+# 創建圓形
+var circle = Shape(kind: Circle, radius: 5.0)
+echo circle.radius  # 輸出: 5.0
+
+# 創建矩形
+var rect = Shape(kind: Rectangle, width: 10.0, height: 20.0)
+echo rect.width, " x ", rect.height  # 輸出: 10.0 x 20.0
+```
+
+### 集合（Set）
+
+集合用於高效存儲和操作一組唯一的序數型別值：
+
+```nim
+# 定義集合型別
+type Colors = enum
+  Red, Green, Blue, Yellow, Purple, Orange
+
+# 創建集合
+var primaryColors: set[Colors] = {Red, Green, Blue}
+var warmColors = {Red, Yellow, Orange}
+
+# 集合操作
+let allColors = primaryColors + warmColors  # 聯集
+let commonColors = primaryColors * warmColors  # 交集
+let diffColors = warmColors - primaryColors  # 差集
+
+echo Red in primaryColors  # 輸出: true
+echo Yellow in primaryColors  # 輸出: false
+
+# 遍歷集合（注意：集合無序）
+for color in allColors:
+  echo color
+```
+
+### 表（Table）
+
+表是鍵值對的集合，類似於其他語言中的字典或映射：
+
+```nim
+import tables
+
+# 創建表
+var ages = {"Alice": 30, "Bob": 25, "Charlie": 35}.toTable
+
+# 添加和修改元素
+ages["David"] = 28
+ages["Alice"] = 31  # 修改現有值
+
+# 訪問元素
+echo ages["Bob"]  # 輸出: 25
+
+# 檢查鍵存在
+if ages.hasKey("Eve"):
+  echo ages["Eve"]
+else:
+  echo "Eve 不在表中"  # 輸出此行
+
+# 遍歷表
+for name, age in ages:
+  echo name, ": ", age
+```
+
+## 引用和指標型別
+
+### 引用型別（ref）
+
+引用型別在堆上分配記憶體，並自動管理記憶體：
+
+```nim
+type
+  Node = ref object
+    data: int
+    next: Node
+
+# 創建引用物件
+var first = Node(data: 10, next: nil)
+var second = Node(data: 20, next: nil)
+first.next = second
+
+echo first.data  # 輸出: 10
+echo first.next.data  # 輸出: 20
+```
+
+### 指標型別（ptr）
+
+指標型別提供更低層次的記憶體存取，但不進行自動記憶體管理：
+
+```nim
+type
+  MyPtr = ptr int
+
+# 分配記憶體
+var x = 42
+var p: MyPtr = addr(x)  # 獲取 x 的記憶體地址
+
+echo p[]  # 解引用，輸出: 42
+
+# 修改指向的值
+p[] = 100
+echo x  # 輸出: 100
+```
+
+## 型別轉換
+
+Nim 提供多種方式進行型別轉換：
+
+### 基本型別轉換
+
+```nim
+var x = 65
+var c = char(x)  # 將整數轉換為字元
+echo c  # 輸出: A
+
+var f = 3.14
+var i = int(f)  # 將浮點數轉換為整數
+echo i  # 輸出: 3
+
+var b = true
+var s = $b  # 將任何型別轉換為字串
+echo s  # 輸出: "true"
+```
+
+### 序數和字串轉換
+
+```nim
+type Color = enum
+  Red, Green, Blue
+
+var c = Red
+var i = ord(c)  # 列舉轉換為整數
+echo i  # 輸出: 0
+
+var nextColor = Color(ord(c) + 1)  # 整數轉換為列舉
+echo nextColor  # 輸出: Green
+```
+
+## 實戰示例
+
+### 示例 1：學生管理系統
+
+結合物件和序列創建一個簡單的學生管理系統：
+
+```nim
+type
+  Grade = enum
+    A, B, C, D, F
   
-proc colorToString(c: Color): string =
-  # TODO: 實現函式內容
+  Subject = enum
+    Math, Physics, Chemistry, Biology, ComputerScience
+  
+  CourseResult = object
+    subject: Subject
+    grade: Grade
+  
+  Student = object
+    id: int
+    name: string
+    results: seq[CourseResult]
 
-# 2. 實現一個函式，檢查兩個集合是否有交集
-proc hasIntersection[T](a, b: set[T]): bool =
-  # TODO: 實現函式內容
+proc addResult(student: var Student, subject: Subject, grade: Grade) =
+  student.results.add(CourseResult(subject: subject, grade: grade))
+
+proc calculateGPA(student: Student): float =
+  if student.results.len == 0:
+    return 0.0
+  
+  var total = 0.0
+  for result in student.results:
+    case result.grade
+    of A: total += 4.0
+    of B: total += 3.0
+    of C: total += 2.0
+    of D: total += 1.0
+    of F: total += 0.0
+  
+  return total / float(student.results.len)
+
+proc printTranscript(student: Student) =
+  echo "學生: ", student.name, " (ID: ", student.id, ")"
+  echo "成績單:"
+  for result in student.results:
+    echo "  ", result.subject, ": ", result.grade
+  echo "平均績點: ", student.calculateGPA()
+
+# 使用示例
+var alice = Student(id: 1, name: "Alice", results: @[])
+alice.addResult(Math, A)
+alice.addResult(Physics, B)
+alice.addResult(Chemistry, A)
+alice.addResult(Biology, C)
+
+alice.printTranscript()
 ```
 
-### 2. 進階型別練習
+### 示例 2：多媒體庫
+
+使用物件變體建立一個多媒體項目庫：
+
 ```nim
-# 1. 實現一個泛型佇列資料結構
+import strutils
+
 type
-  Queue[T] = object
-    items: seq[T]
+  MediaType = enum
+    Audio, Video, Image
+  
+  MediaItem = object
+    id: int
+    title: string
+    case mediaType: MediaType
+    of Audio:
+      duration: int  # 秒
+      artist: string
+    of Video:
+      length: int    # 秒
+      resolution: tuple[width: int, height: int]
+    of Image:
+      dimensions: tuple[width: int, height: int]
+      format: string  # "jpeg", "png", etc.
 
-proc newQueue[T](): Queue[T] =
-  # TODO: 實現建構函式
+proc formatDuration(seconds: int): string =
+  let minutes = seconds div 60
+  let remSeconds = seconds mod 60
+  return $minutes & ":" & align($remSeconds, 2, '0')
 
-proc enqueue[T](q: var Queue[T], item: T) =
-  # TODO: 實現入隊操作
+proc displayMediaInfo(item: MediaItem) =
+  echo "ID: ", item.id
+  echo "標題: ", item.title
+  
+  case item.mediaType
+  of Audio:
+    echo "類型: 音訊"
+    echo "時長: ", formatDuration(item.duration)
+    echo "藝術家: ", item.artist
+  of Video:
+    echo "類型: 視訊"
+    echo "時長: ", formatDuration(item.length)
+    echo "解析度: ", item.resolution.width, "x", item.resolution.height
+  of Image:
+    echo "類型: 圖片"
+    echo "尺寸: ", item.dimensions.width, "x", item.dimensions.height
+    echo "格式: ", item.format
 
-proc dequeue[T](q: var Queue[T]): T =
-  # TODO: 實現出隊操作
+# 使用示例
+var mediaLibrary: seq[MediaItem] = @[
+  MediaItem(id: 1, title: "Favorite Song", mediaType: Audio, duration: 187, artist: "Great Artist"),
+  MediaItem(id: 2, title: "Vacation Photo", mediaType: Image, dimensions: (1920, 1080), format: "jpeg"),
+  MediaItem(id: 3, title: "Tutorial Video", mediaType: Video, length: 720, resolution: (1280, 720))
+]
 
-# 2. 實現一個簡單的資料庫表格結構
-type
-  Row = Table[string, string]
-  Table = object
-    columns: seq[string]
-    rows: seq[Row]
-
-proc addRow(t: var Table, row: Row) =
-  # TODO: 實現添加行操作
+for item in mediaLibrary:
+  displayMediaInfo(item)
+  echo "-------------------"
 ```
 
-### 3. 挑戰練習
-```nim
-# 實現一個簡單的二元樹結構
-type
-  BinaryTree[T] = ref object
-    value: T
-    left, right: BinaryTree[T]
+## 最佳實踐
 
-proc insert[T](tree: var BinaryTree[T], value: T) =
-  # TODO: 實現插入操作
+1. **型別選擇**：
+   - 使用陣列時確定大小固定且編譯時已知
+   - 使用序列時需要動態調整大小
+   - 需要異質數據但不需繼承時，優先使用元組
+   - 物件適用於需要更複雜結構或未來可能擴展的情況
 
-proc search[T](tree: BinaryTree[T], value: T): bool =
-  # TODO: 實現搜索操作
-```
+2. **記憶體管理**：
+   - 優先使用 `ref` 而非 `ptr`，除非有特殊性能需求
+   - 使用 `ptr` 時注意手動釋放記憶體以避免洩漏
+
+3. **型別安全**：
+   - 避免使用 `cast` 進行型別轉換，除非絕對必要
+   - 對序數轉換，確保值在目標型別範圍內
+   - 使用物件變體而非手動標記和條件判斷
+
+4. **集合操作**：
+   - 對於需要頻繁檢查成員資格的小型序數集合，使用 `set`
+   - 對於更大或非序數型別的集合，使用 `HashSet`
 
 ## 小測驗
-1. 列舉型別和集合型別的區別是什麼？
-2. 什麼情況下應該使用 tuple 而不是 object？
-3. seq 和 array 的主要區別是什麼？
-4. 如何實現自定義型別的相等比較？
+1. 列舉型別的第一個成員的序數值是什麼？
+2. Nim 中，如何獲取序列的最後一個元素？
+3. 物件和元組的主要區別是什麼？
+4. 在 Nim 中，哪種型別用於在堆上分配記憶體？
+5. 以下代碼輸出什麼？
+   ```nim
+   var colors = {2, 4, 6, 8}
+   var moreColors = {1, 3, 5, 7, 9}
+   echo 4 in colors
+   echo 5 in colors + moreColors
+   ```
 
 ## 進一步閱讀
-- [Nim 官方文檔：Types](https://nim-lang.org/docs/manual.html#types)
-- [Nim by Example：Types](https://nim-by-example.github.io/types/)
-- [Nim 官方文檔：Type Classes](https://nim-lang.org/docs/manual.html#generics-type-classes)
+- [Nim 官方文檔：型別](https://nim-lang.org/docs/manual.html#types)
+- [Nim 官方文檔：序列、陣列和字串](https://nim-lang.org/docs/manual.html#types-array-and-sequence-types)
+- [Nim 標準庫：tables 模組](https://nim-lang.org/docs/tables.html)
+- [Nim 記憶體管理](https://nim-lang.org/docs/gc.html)
+
+---
+
+下一章將介紹 Nim 的引用和指標，深入探討記憶體管理機制。
