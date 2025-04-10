@@ -2,7 +2,17 @@ site_name: Nim 學習筆記
 site_url: https://mydomain.org/
 theme:
   name: material
+  palette:
+    scheme: slate
+    primary: lime  # 主色調
+    accent: red    # 強調色
+  font:
+    text: Roboto     
+    code: Roboto Mono
   features:
+    - content.code.copy
+    - search.suggest
+    - palette.toggle
     - navigation.tabs
     - navigation.tabs.sticky
 
@@ -42,3 +52,35 @@ nav:
     - practices/08-template.md
     - practices/09-pragmas.md
     - practices/10-macros.md
+  - 30天挑戰:
+    - challenges/README.md
+    - challenges/day01.md
+    - challenges/day02.md
+    - challenges/day03.md
+    - challenges/day04.md
+    - challenges/day05.md
+    - challenges/day06.md
+    - challenges/day07.md
+    - challenges/day08.md
+    - challenges/day09.md
+    - challenges/day10.md
+    - challenges/day11.md
+    - challenges/day12.md
+    - challenges/day13.md
+    - challenges/day14.md
+    - challenges/day15.md
+    - challenges/day16.md
+    - challenges/day17.md
+    - challenges/day18.md
+    - challenges/day19.md
+    - challenges/day20.md
+    - challenges/day21.md
+    - challenges/day22.md
+    - challenges/day23.md
+    - challenges/day24.md
+    - challenges/day25.md
+    - challenges/day26.md
+    - challenges/day27.md
+    - challenges/day28.md
+    - challenges/day29.md
+    - challenges/day30.md
