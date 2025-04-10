@@ -33,3 +33,10 @@ nav:
     - practices/01-comment-and-declare.md
     - practices/02-type-inference-and-output.md
     - practices/03-condition-flow.md
+    - practices/04-function-and-iterator.md
+    - practices/05-types-in-detail.md
+    - practices/06-modules-and-practice.md
+    - practices/07-error-and-generic.md
+    - practices/08-template.md
+    - practices/09-macros.md
+    - practices/10-pragmas.md

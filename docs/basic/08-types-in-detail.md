@@ -1,8 +1,38 @@
-# 型別詳解  
+# 型別詳解
+
+## 學習目標
+- 深入理解 Nim 的型別系統
+- 掌握基本型別的進階操作
+- 學會自定義型別和型別轉換
+- 理解型別系統的安全性機制
+
+## 先決條件
+- 已完成基本型別學習
+- 理解函式和模組概念
+- 熟悉基本的物件導向概念
+
+## 關鍵概念
+1. 基本型別進階
+   - 布林操作
+   - 字元處理
+   - 字串操作
+   - 數值型別轉換
+   
+2. 複合型別特性
+   - 序列操作
+   - 集合運算
+   - 表操作
+   - 物件方法
+   
+3. 型別安全
+   - 型別檢查
+   - 型別推導
+   - 型別約束
+   - 空值安全
 
 ## 基本型別操作
 
-### 布林、字元、字串的操作與應用  
+### 布林、字元、字串的操作與應用
 
 Nim 提供了常見的基本型別如布林 (`bool`)、字元 (`char`) 和字串 (`string`)。這些型別在程式中廣泛應用，並且擁有豐富的操作方法。
 
@@ -18,6 +48,19 @@ let b = false
 echo a and b  # 輸出: false
 echo a or b   # 輸出: true
 echo not a    # 輸出: false
+
+# 布林運算和短路求值
+proc expensive(): bool =
+  echo "執行昂貴操作"
+  result = false
+
+var x = true
+if x and expensive():  # expensive() 不會被調用
+  echo "永遠不會執行"
+
+# xor 運算
+echo true xor false  # 輸出：true
+echo true xor true   # 輸出：false
 ```
 
 #### 字元型別 (`char`)  
@@ -52,8 +95,26 @@ echo s.contains("Nim")  # 輸出: true
 # 字串分割
 for part in s.split(","):
   echo part  # 輸出: Hello 和 Nim!
-```
 
+# 字串插值和格式化
+let name = "Alice"
+let age = 25
+echo &"{name} is {age} years old"
+
+# 多行字串處理
+let query = """
+  SELECT *
+  FROM users
+  WHERE age > 18
+  ORDER BY name
+"""
+
+# 字串變換
+import strutils
+echo "Hello, World".toLower()
+echo "  trim me  ".strip()
+echo "1,2,3".split(',')
+```
 
 ### 整數與浮點數的運算與轉換  
 
@@ -134,5 +195,120 @@ echo s  # 輸出: false
 元組型別適合用於簡單的資料封裝，尤其是在函式返回多個值時非常有用。
 
 ---
+
+## 實戰示例
+
+### 1. 實現一個安全的字串處理器
+```nim
+type
+  StringProcessor = object
+    maxLength: int
+    defaultValue: string
+
+proc newStringProcessor(maxLen: int, default = ""): StringProcessor =
+  result.maxLength = maxLen
+  result.defaultValue = default
+
+proc process(sp: StringProcessor, input: string): string =
+  if input.len > sp.maxLength:
+    result = input[0..<sp.maxLength] & "..."
+  elif input.len == 0:
+    result = sp.defaultValue
+  else:
+    result = input
+
+# 使用示例
+let sp = newStringProcessor(10)
+echo sp.process("This is a very long string")  # 輸出：This is a...
+echo sp.process("")  # 輸出：""
+```
+
+### 2. 實現一個型別安全的配置解析器
+```nim
+type
+  ConfigValue = object
+    case kind: enum
+      ckString, ckInt, ckBool
+    of ckString:
+      strVal: string
+    of ckInt:
+      intVal: int
+    of ckBool:
+      boolVal: bool
+
+proc parseConfig(input: string): ConfigValue =
+  # 首先嘗試解析為整數
+  try:
+    return ConfigValue(kind: ckInt, intVal: parseInt(input))
+  except ValueError:
+    discard
+
+  # 嘗試解析為布林值
+  case input.toLower()
+  of "true", "yes", "1":
+    return ConfigValue(kind: ckBool, boolVal: true)
+  of "false", "no", "0":
+    return ConfigValue(kind: ckBool, boolVal: false)
+  else:
+    return ConfigValue(kind: ckString, strVal: input)
+
+# 使用示例
+let conf1 = parseConfig("123")
+let conf2 = parseConfig("true")
+let conf3 = parseConfig("hello")
+```
+
+### 3. 實現一個泛型集合操作器
+```nim
+type
+  SetOperator[T] = object
+    data: set[T]
+
+proc newSetOperator[T](): SetOperator[T] =
+  result.data = {}
+
+proc add[T](so: var SetOperator[T], item: T) =
+  so.data.incl(item)
+
+proc remove[T](so: var SetOperator[T], item: T) =
+  so.data.excl(item)
+
+proc intersection[T](so: SetOperator[T], other: SetOperator[T]): SetOperator[T] =
+  result.data = so.data * other.data
+
+# 使用示例
+var set1 = newSetOperator[char]()
+set1.add('a')
+set1.add('b')
+set1.add('c')
+```
+
+## 最佳實踐
+
+1. 型別安全建議：
+   - 優先使用強型別
+   - 避免不必要的型別轉換
+   - 使用 Option[T] 處理可能的空值
+
+2. 字串處理建議：
+   - 使用字串內插而不是串接
+   - 注意字串編碼問題
+   - 使用多行字串提高可讀性
+
+3. 集合操作建議：
+   - 選擇合適的集合型別
+   - 注意效能影響
+   - 使用內建操作符
+
+## 小測驗
+1. Nim 中字串是可變的還是不可變的？
+2. 什麼情況下應該使用 case 物件？
+3. set 型別有什麼限制？
+4. 如何安全地處理可能為 nil 的值？
+
+## 進一步閱讀
+- [Nim 官方文檔：Types](https://nim-lang.org/docs/manual.html#types)
+- [Nim 官方文檔：String Handling](https://nim-lang.org/docs/manual.html#string-handling)
+- [Nim 標準庫：strutils](https://nim-lang.org/docs/strutils.html)
 
 透過學習基本型別操作與進階型別應用，開發者可以更靈活地處理資料並設計高效、安全的程式邏輯。

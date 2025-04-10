@@ -2,6 +2,34 @@
 
 Nim 提供豐富且靈活的型別系統，支援多種進階型別，幫助開發者更精確地控制資料結構與程式邏輯。
 
+## 學習目標
+- 掌握 Nim 的進階型別系統
+- 學會定義和使用自定義型別
+- 理解型別轉換和型別推導
+- 熟練運用集合和序列型別
+
+## 先決條件
+- 已完成基本型別學習
+- 了解函式和模組基礎
+- 熟悉基本控制流程
+
+## 關鍵概念
+1. 列舉和序數型別
+   - enum 定義
+   - 序數型別特性
+   - 型別轉換
+   
+2. 複合型別
+   - array 和 seq
+   - set 和 table
+   - tuple 和 object
+   
+3. 型別系統特性
+   - 型別推導
+   - 型別轉換
+   - 泛型支援
+   - 子型別關係
+
 ## 基本進階型別
 
 ### 列舉型別 (Enumerations)
@@ -47,8 +75,6 @@ var myAge: Age = 25
 ```
 
 子範圍型別確保值僅限於指定範圍。
-
-
 
 ## 集合與陣列
 
@@ -184,3 +210,73 @@ var length: Meter = 100
 ```
 
 透過 `distinct`，開發者可以定義更具語意的型態。
+
+## 練習題
+
+### 1. 基礎型別練習
+```nim
+# 1. 實現一個函式，將列舉型別轉換為字串
+type
+  Color = enum
+    Red, Green, Blue
+  
+proc colorToString(c: Color): string =
+  # TODO: 實現函式內容
+
+# 2. 實現一個函式，檢查兩個集合是否有交集
+proc hasIntersection[T](a, b: set[T]): bool =
+  # TODO: 實現函式內容
+```
+
+### 2. 進階型別練習
+```nim
+# 1. 實現一個泛型佇列資料結構
+type
+  Queue[T] = object
+    items: seq[T]
+
+proc newQueue[T](): Queue[T] =
+  # TODO: 實現建構函式
+
+proc enqueue[T](q: var Queue[T], item: T) =
+  # TODO: 實現入隊操作
+
+proc dequeue[T](q: var Queue[T]): T =
+  # TODO: 實現出隊操作
+
+# 2. 實現一個簡單的資料庫表格結構
+type
+  Row = Table[string, string]
+  Table = object
+    columns: seq[string]
+    rows: seq[Row]
+
+proc addRow(t: var Table, row: Row) =
+  # TODO: 實現添加行操作
+```
+
+### 3. 挑戰練習
+```nim
+# 實現一個簡單的二元樹結構
+type
+  BinaryTree[T] = ref object
+    value: T
+    left, right: BinaryTree[T]
+
+proc insert[T](tree: var BinaryTree[T], value: T) =
+  # TODO: 實現插入操作
+
+proc search[T](tree: BinaryTree[T], value: T): bool =
+  # TODO: 實現搜索操作
+```
+
+## 小測驗
+1. 列舉型別和集合型別的區別是什麼？
+2. 什麼情況下應該使用 tuple 而不是 object？
+3. seq 和 array 的主要區別是什麼？
+4. 如何實現自定義型別的相等比較？
+
+## 進一步閱讀
+- [Nim 官方文檔：Types](https://nim-lang.org/docs/manual.html#types)
+- [Nim by Example：Types](https://nim-by-example.github.io/types/)
+- [Nim 官方文檔：Type Classes](https://nim-lang.org/docs/manual.html#generics-type-classes)

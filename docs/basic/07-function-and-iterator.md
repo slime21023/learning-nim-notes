@@ -1,4 +1,136 @@
-# 進階函式與迭代器  
+# 進階函式與迭代器
+
+## 學習目標
+- 掌握函式重載的概念和應用
+- 學會創建和使用自定義運算子
+- 理解迭代器的工作原理
+- 掌握閉包和匿名函式的使用
+
+## 先決條件
+- 已完成基本函式學習
+- 理解泛型和型別系統
+- 熟悉基本的迭代概念
+
+## 關鍵概念
+1. 函式進階特性
+   - 函式重載
+   - 運算子重載
+   - 閉包
+   - 匿名函式
+   
+2. 迭代器基礎
+   - 迭代器定義
+   - yield 語句
+   - 閉包迭代器
+   
+3. 高階函式
+   - 函式作為參數
+   - 返回函式
+   - 函式組合
+
+## 基礎概念
+
+### 函式重載
+```nim
+# 基於參數類型的重載
+proc process(x: int) = echo "處理整數：", x
+proc process(x: string) = echo "處理字串：", x
+
+# 基於參數數量的重載
+proc sum(a, b: int): int = a + b
+proc sum(a, b, c: int): int = a + b + c
+```
+
+### 自定義運算子
+```nim
+# 定義新的運算子
+proc `++`(a, b: int): int = a * 2 + b
+proc `=~`(a, b: float): bool = abs(a - b) < 0.001
+
+echo 5 ++ 3  # 輸出：13
+echo 1.0 =~ 1.0001  # 輸出：true
+```
+
+## 實戰示例
+
+### 1. 實現一個通用的比較器
+```nim
+type
+  Comparator[T] = proc(a, b: T): int
+
+proc defaultCompare[T](a, b: T): int =
+  if a < b: -1
+  elif a > b: 1
+  else: 0
+
+proc sortBy[T](arr: var seq[T], cmp: Comparator[T] = defaultCompare[T]) =
+  # 使用自定義比較器的排序實現
+  for i in 0..arr.high:
+    for j in i+1..arr.high:
+      if cmp(arr[i], arr[j]) > 0:
+        swap(arr[i], arr[j])
+```
+
+### 2. 實現一個懶惰求值的數列生成器
+```nim
+iterator fibonacci(): int {.closure.} =
+  var a = 0
+  var b = 1
+  while true:
+    yield a
+    let next = a + b
+    a = b
+    b = next
+
+# 使用示例
+proc printFirstN(n: int) =
+  var count = 0
+  for num in fibonacci():
+    if count >= n: break
+    echo num
+    inc count
+```
+
+### 3. 實現函式組合器
+```nim
+proc compose[A, B, C](f: proc(x: B): C, g: proc(x: A): B): proc(x: A): C =
+  result = proc(x: A): C = f(g(x))
+
+# 使用示例
+proc double(x: int): int = x * 2
+proc addOne(x: int): int = x + 1
+
+let doubleAndAddOne = compose(addOne, double)
+echo doubleAndAddOne(5)  # 輸出：11
+```
+
+## 最佳實踐
+
+1. 函式重載建議：
+   - 保持參數類型明顯區別
+   - 避免過度重載造成混淆
+   - 提供清晰的文檔說明
+
+2. 運算子重載建議：
+   - 保持運算子語義直觀
+   - 避免違反常規使用習慣
+   - 適度使用，不要過度
+
+3. 迭代器使用建議：
+   - 適當使用懶惰求值
+   - 注意資源管理
+   - 考慮性能影響
+
+## 小測驗
+1. 函式重載和預設參數有什麼區別？
+2. 什麼情況下應該使用閉包迭代器？
+3. 為什麼要使用懶惰求值？
+4. 如何避免運算子重載導致的混淆？
+
+## 進一步閱讀
+- [Nim 官方文檔：Procedures](https://nim-lang.org/docs/manual.html#procedures)
+- [Nim 官方文檔：Iterators](https://nim-lang.org/docs/manual.html#iterators)
+- [Nim 官方文檔：First Class Functions](https://nim-lang.org/docs/manual.html#procedures-first-class-functions)
 
 ## 函式重載與運算子
 

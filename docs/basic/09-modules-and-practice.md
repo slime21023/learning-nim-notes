@@ -1,5 +1,212 @@
 # 模組與程式設計實踐  
 
+## 學習目標
+- 理解模組化設計的原則和優勢
+- 掌握 Nim 模組系統的使用方法
+- 學會組織和管理大型專案
+- 實踐軟體工程最佳實踐
+
+## 先決條件
+- 已完成基本語法學習
+- 理解函式和型別系統
+- 熟悉基本的檔案操作
+
+## 關鍵概念
+1. 模組系統基礎
+   - 模組定義和導入
+   - 可見性控制
+   - 命名空間管理
+   - 循環依賴處理
+   
+2. 專案組織
+   - 目錄結構
+   - 套件管理
+   - 建置系統
+   - 測試框架
+   
+3. 設計模式
+   - 依賴注入
+   - 工廠模式
+   - 單例模式
+   - 觀察者模式
+
+## 模組化設計
+
+### 模組的定義與組織
+
+模組是程式碼組織的基本單位，每個 `.nim` 檔案都是一個模組。良好的模組設計應該：
+- 職責單一
+- 高內聚低耦合
+- 介面清晰
+- 易於測試
+
+#### 基本模組結構
+```nim
+# mathutils.nim
+type
+  Vector* = object  # 公開型別
+    x*, y*: float  # 公開欄位
+    
+proc add*(a, b: Vector): Vector =  # 公開函式
+  result.x = a.x + b.x
+  result.y = a.y + b.y
+
+proc length(v: Vector): float =  # 私有函式
+  sqrt(v.x * v.x + v.y * v.y)
+```
+
+### 模組的導入與使用
+
+Nim 提供了多種導入模組的方式，每種方式都有其特定用途：
+
+```nim
+# 基本導入
+import mathutils
+
+# 選擇性導入
+from mathutils import add
+
+# 重命名導入
+import mathutils as math
+
+# 限定符號導入
+from mathutils import nil
+```
+
+## 實戰示例
+
+### 1. 實現一個模組化的日誌系統
+```nim
+# logger.nim
+type
+  LogLevel* = enum
+    Debug, Info, Warning, Error
+
+  Logger* = object
+    minLevel*: LogLevel
+    useTimestamp*: bool
+
+proc newLogger*(minLevel = Info, useTimestamp = true): Logger =
+  result.minLevel = minLevel
+  result.useTimestamp = useTimestamp
+
+proc log*(logger: Logger, level: LogLevel, msg: string) =
+  if level >= logger.minLevel:
+    let timestamp = if logger.useTimestamp: $now() & " " else: ""
+    echo timestamp & $level & ": " & msg
+
+# main.nim
+import logger
+
+let log = newLogger()
+log.log(Info, "應用程式啟動")
+log.log(Debug, "這條訊息不會顯示")
+log.log(Error, "發生錯誤！")
+```
+
+### 2. 實現一個簡單的依賴注入容器
+```nim
+# container.nim
+type
+  Container* = ref object
+    services: Table[string, proc()]
+
+proc newContainer*(): Container =
+  new(result)
+  result.services = initTable[string, proc()]()
+
+proc register*[T](container: Container, factory: proc(): T) =
+  container.services[$T] = proc() = factory()
+
+proc resolve*[T](container: Container): T =
+  let factory = container.services[$T]
+  factory().T
+
+# service.nim
+type
+  Database* = ref object
+    connectionString: string
+
+  UserService* = ref object
+    db: Database
+
+proc newDatabase*(): Database =
+  Database(connectionString: "localhost:5432")
+
+proc newUserService*(db: Database): UserService =
+  UserService(db: db)
+
+# main.nim
+let container = newContainer()
+container.register(newDatabase)
+container.register(proc(): UserService = newUserService(resolve[Database]()))
+```
+
+### 3. 實現一個模組化的命令列應用程式
+```nim
+# commands.nim
+type
+  Command* = object
+    name*: string
+    description*: string
+    execute*: proc(args: seq[string])
+
+# command_registry.nim
+var commands = initTable[string, Command]()
+
+proc registerCommand*(cmd: Command) =
+  commands[cmd.name] = cmd
+
+proc executeCommand*(name: string, args: seq[string]) =
+  if commands.hasKey(name):
+    commands[name].execute(args)
+  else:
+    echo "未知命令：", name
+
+# specific_commands.nim
+proc initCommands*() =
+  registerCommand(Command(
+    name: "greet",
+    description: "向用戶問好",
+    execute: proc(args: seq[string]) =
+      if args.len > 0:
+        echo "你好，", args[0]
+      else:
+        echo "你好，訪客"
+  ))
+```
+
+## 最佳實踐
+
+1. 模組組織建議：
+   - 按功能劃分模組
+   - 保持模組大小適中
+   - 避免循環依賴
+   - 明確定義公開介面
+
+2. 命名規範：
+   - 使用有意義的名稱
+   - 遵循一致的命名風格
+   - 避免名稱衝突
+   - 適當使用命名空間
+
+3. 錯誤處理：
+   - 統一錯誤處理方式
+   - 提供有意義的錯誤訊息
+   - 適當使用異常機制
+   - 考慮錯誤恢復策略
+
+## 小測驗
+1. Nim 中如何控制符號的可見性？
+2. 什麼情況下應該使用 `from ... import nil`？
+3. 如何避免模組間的循環依賴？
+4. 為什麼要使用依賴注入？
+
+## 進一步閱讀
+- [Nim 官方文檔：Modules](https://nim-lang.org/docs/manual.html#modules)
+- [Nim 套件管理：Nimble](https://github.com/nim-lang/nimble)
+- [Nim 測試框架：unittest](https://nim-lang.org/docs/unittest.html)
+
 ## 模組化設計
 
 模組化設計是一種將程式碼拆分為多個模組的方式，旨在提升程式的可讀性、可維護性以及重用性。Nim 提供了強大的模組管理功能，讓開發者能夠輕鬆地組織和導入模組。

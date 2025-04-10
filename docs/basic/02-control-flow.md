@@ -1,5 +1,31 @@
 # 控制流程
 
+## 學習目標
+- 掌握 Nim 中的條件判斷語句
+- 理解並運用各種循環結構
+- 學會使用 break 和 continue 控制流程
+- 熟悉 case 語句的使用
+
+## 先決條件
+- 已完成環境設置
+- 了解基本變數宣告和賦值
+- 熟悉基本運算符
+
+## 關鍵概念
+1. 條件判斷
+   - if/elif/else 結構
+   - 比較運算符
+   - 邏輯運算符
+   
+2. 循環結構
+   - for 循環
+   - while 循環
+   - 循環控制語句
+
+3. 分支選擇
+   - case 語句
+   - 模式匹配
+
 ### 條件判斷
 
 #### `if` 語句
@@ -143,3 +169,51 @@ for i, name in names:
 索引 1: Bob
 索引 2: Charlie
 ```
+
+## 練習題
+
+### 1. 基礎練習
+```nim
+# 1. 實現一個函數，判斷一個數是否為偶數
+proc isEven(n: int): bool =
+  # TODO: 實現函數內容
+  
+# 2. 使用 while 循環計算 1 到 n 的和
+proc sumToN(n: int): int =
+  # TODO: 實現函數內容
+```
+
+### 2. 進階練習
+```nim
+# 1. 實現 FizzBuzz
+# 規則：3的倍數輸出"Fizz"，5的倍數輸出"Buzz"，
+# 同時是3和5的倍數輸出"FizzBuzz"
+proc fizzBuzz(n: int) =
+  # TODO: 實現函數內容
+
+# 2. 使用 case 語句實現簡單計算器
+proc calculator(a, b: int, op: char): int =
+  # TODO: 實現函數內容
+```
+
+### 3. 挑戰題
+```nim
+# 實現一個函數，使用嵌套循環輸出以下圖案：
+# *
+# **
+# ***
+# ****
+# *****
+proc printStars(n: int) =
+  # TODO: 實現函數內容
+```
+
+## 小測驗
+1. if 語句可以沒有 else 分支嗎？
+2. while 和 for 循環的主要區別是什麼？
+3. case 語句和多個 if-elif 語句的區別是什麼？
+4. 什麼情況下應該使用 break 語句？
+
+## 進一步閱讀
+- [Nim 官方文檔：Control Flow](https://nim-lang.org/docs/manual.html#statements-and-expressions)
+- [Nim by Example：Control Flow](https://nim-by-example.github.io/control_flow/)

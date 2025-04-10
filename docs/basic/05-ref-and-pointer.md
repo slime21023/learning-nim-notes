@@ -1,6 +1,31 @@
 # 參考與指標
 
-Nim 提供兩種用於操作記憶體的型別：**參考型別 (`ref`)** 和 **指標型別 (`ptr`)**。這兩種型別分別適用於高階與低階的記憶體操作，並在不同層面提供靈活性與控制能力。
+## 學習目標
+- 理解參考型別和指標型別的區別
+- 掌握記憶體管理的基本概念
+- 學會使用 ref 建立動態資料結構
+- 了解指標的安全使用方式
+
+## 先決條件
+- 已完成基本型別學習
+- 理解物件和型別系統
+- 熟悉基本的記憶體概念
+
+## 關鍵概念
+1. 參考型別 (ref)
+   - 垃圾回收機制
+   - 動態記憶體分配
+   - nil 安全性
+   
+2. 指標型別 (ptr)
+   - 手動記憶體管理
+   - 指標算術
+   - 不安全操作
+   
+3. 記憶體管理
+   - 堆積與堆疊
+   - 記憶體洩漏
+   - 記憶體安全
 
 ## 參考型別
 
@@ -23,7 +48,6 @@ echo p.age   # 輸出：31
 
 `p` 是一個參考型別的變數，指向一個動態分配的 `Person` 物件。
 
-
 ### 參考的應用場景
 
 #### 動態資料結構  
@@ -45,7 +69,6 @@ echo head.next.value  # 輸出：2
 ### 參考的限制
 - **不可直接比較**： 參考變數只能比較是否為 `nil`，但無法直接比較兩個參考是否指向相同的物件。
 - **需要垃圾回收**： 由於 `ref` 型別依賴垃圾回收機制，因此在即時性要求高的場景（如嵌入式系統）中可能不適用。
-
 
 ## 指標型別
 
@@ -114,3 +137,76 @@ echo px[]  # 輸出：10
 ---
 
 透過 `ref` 和 `ptr` 型別，Nim 提供了靈活的記憶體操作能力，滿足從高階應用到低階操作的多樣需求。開發者可根據應用場景選擇合適的型別，並注意各自的限制與風險。
+
+## 實戰示例
+
+### 1. 鏈結串列實現
+```nim
+type
+  Node[T] = ref object
+    data: T
+    next: Node[T]
+
+proc newNode[T](data: T): Node[T] =
+  Node[T](data: data, next: nil)
+
+proc append[T](head: var Node[T], data: T) =
+  if head == nil:
+    head = newNode(data)
+    return
+  
+  var current = head
+  while current.next != nil:
+    current = current.next
+  current.next = newNode(data)
+```
+
+### 2. 二叉樹實現
+```nim
+type
+  Tree[T] = ref object
+    value: T
+    left, right: Tree[T]
+
+proc newTree[T](value: T): Tree[T] =
+  Tree[T](value: value)
+
+proc insert[T](root: var Tree[T], value: T) =
+  if root == nil:
+    root = newTree(value)
+    return
+  
+  if value < root.value:
+    if root.left == nil:
+      root.left = newTree(value)
+    else:
+      insert(root.left, value)
+  else:
+    if root.right == nil:
+      root.right = newTree(value)
+    else:
+      insert(root.right, value)
+```
+
+## 安全性注意事項
+
+1. ref 型別的最佳實踐：
+   - 初始化時賦值
+   - 使用 Option[T] 處理可能為 nil 的情況
+   - 避免循環參考
+
+2. ptr 型別的安全使用：
+   - 限制在必要的底層操作
+   - 確保正確釋放記憶體
+   - 避免懸掛指標
+
+## 小測驗
+1. ref 和 ptr 的主要區別是什麼？
+2. 什麼情況下應該使用 ptr 而不是 ref？
+3. 如何避免記憶體洩漏？
+4. 循環參考會造成什麼問題？如何解決？
+
+## 進一步閱讀
+- [Nim 官方文檔：Memory Management](https://nim-lang.org/docs/gc.html)
+- [Nim 官方文檔：Pointers](https://nim-lang.org/docs/manual.html#types-pointer-type)
+- [Nim Memory Management Deep Dive](https://nim-lang.org/blog/2020/10/15/introduction-to-arc-orc-in-nim.html)
